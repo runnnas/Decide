@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 // These variables MUST be defined here to be used below
@@ -40,6 +41,7 @@ export default function RootLayout({
         <div className="min-h-screen flex flex-col items-center overflow-x-hidden bg-[#5a595f]">
           {children}
         </div>
+        <Analytics />
       </body>
     </html>
   );
