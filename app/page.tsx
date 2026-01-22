@@ -610,8 +610,7 @@ export default function DecisionApp() {
     }
   };
 
-  // --- HELPER: Edit Tasks Inside a Category ---
-  // --- HELPER: Toggle Timer Mode ---
+  // --- HELPER: 
   const toggleTimerMode = (catName: string) => {
     setCategories(categories.map(c => 
       c.name === catName ? { ...c, timerEnabled: !c.timerEnabled } : c
@@ -758,109 +757,112 @@ export default function DecisionApp() {
                       </>
                   )}
 
-                  {/* EDIT SYSTEM (Accordion Style + Paywall) */}
+                  {/* EDIT SYSTEM (Whole View Locked) */}
                   {menuView === 'edit' && (
                     <div className="animate-in slide-in-from-right-4 duration-300">
+                      
+                      {/* Back button stays visible so they can leave */}
                       <button onClick={() => setMenuView('main')} className="mb-4 text-xs font-bold opacity-50 hover:opacity-100 transition">← BACK</button>
-                      <div className="space-y-3 mb-8 max-h-[50vh] overflow-y-auto pr-2 custom-scrollbar">
-                          
-                          {categories.map((cat) => (
-                            <div key={cat.name} className="bg-white/5 border border-white/10 rounded-xl overflow-hidden backdrop-blur-md transition-all">
-                              
-                              {/* HEADER: Click to Expand */}
-                              <div className="flex items-center justify-between p-4 cursor-pointer hover:bg-white/5" onClick={() => setExpandedCat(expandedCat === cat.name ? null : cat.name)}>
-                                <span className="font-bold text-sm flex items-center gap-2">
-                                  {expandedCat === cat.name ? '▼' : '▶'} {cat.name}
-                                </span>
+                      
+                      {/* --- MASTER LOCK: Blocks the entire Edit List --- */}
+                      <PaywallGuard 
+                        isLocked={status !== 'full' && status !== 'trial' && status !== 'dev'} 
+                        triggerUnlock={() => setUnlockModalOpen(true)}
+                      >
+                        <div className="space-y-3 mb-8 max-h-[50vh] overflow-y-auto pr-2 custom-scrollbar">
+                            
+                            {categories.map((cat) => (
+                              <div key={cat.name} className="bg-white/5 border border-white/10 rounded-xl overflow-hidden backdrop-blur-md transition-all">
                                 
-                                <div className="flex items-center gap-2">
-                                  {/* 1. TIMER TOGGLE */}
-                                  <button 
-                                    onClick={(e) => { e.stopPropagation(); toggleTimerMode(cat.name); }}
-                                    className={cn("text-[10px] font-black uppercase px-2 py-1 rounded border transition-colors", cat.timerEnabled !== false ? "bg-blue-500/20 border-blue-500 text-blue-400" : "opacity-30 border-white/30")}
-                                  >
-                                    {cat.timerEnabled !== false ? "⏱️ ON" : "⏱️ OFF"}
-                                  </button>
-
-                                  {/* 2. TV TOGGLE */}
-                                  <button 
-                                    onClick={(e) => { e.stopPropagation(); toggleVideoMode(cat.name); }}
-                                    className={cn("text-[10px] font-black uppercase px-2 py-1 rounded border transition-colors", cat.videoEnabled ? "bg-emerald-500/20 border-emerald-500 text-emerald-400" : "opacity-30 border-white/30")}
-                                  >
-                                    {cat.videoEnabled ? "📺 ON" : "📺 OFF"}
-                                  </button>
-
-                                  {/* 3. DELETE CATEGORY (Protected) */}
-                                  {!defaultCategories.includes(cat.name) && (
+                                {/* HEADER: Click to Expand */}
+                                <div className="flex items-center justify-between p-4 cursor-pointer hover:bg-white/5" onClick={() => setExpandedCat(expandedCat === cat.name ? null : cat.name)}>
+                                  <span className="font-bold text-sm flex items-center gap-2">
+                                    {expandedCat === cat.name ? '▼' : '▶'} {cat.name}
+                                  </span>
+                                  
+                                  <div className="flex items-center gap-2">
+                                    {/* 1. TIMER TOGGLE */}
                                     <button 
-                                      onClick={(e) => { e.stopPropagation(); handleDeleteCategory(cat.name); }}
-                                      className="w-8 h-8 rounded-full bg-red-500/20 text-red-400 flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors"
+                                      onClick={(e) => { e.stopPropagation(); toggleTimerMode(cat.name); }}
+                                      className={cn("text-[10px] font-black uppercase px-2 py-1 rounded border transition-colors", cat.timerEnabled !== false ? "bg-blue-500/20 border-blue-500 text-blue-400" : "opacity-30 border-white/30")}
                                     >
-                                      🗑️
+                                      {cat.timerEnabled !== false ? "⏱️ ON" : "⏱️ OFF"}
                                     </button>
-                                  )}
-                                </div>
-                              </div>
 
-                              {/* BODY: The Task List (Paywalled) */}
-                              <AnimatePresence>
-                                {expandedCat === cat.name && (
-                                  <motion.div 
-                                    initial={{ height: 0, opacity: 0 }} 
-                                    animate={{ height: "auto", opacity: 1 }} 
-                                    exit={{ height: 0, opacity: 0 }}
-                                    className="border-t border-white/10 bg-black/20"
-                                  >
-                                    {/* --- PAYWALL GUARD START --- */}
-                                    <PaywallGuard 
-                                      isLocked={!['Meals', 'Self Care', 'Self-Care'].includes(cat.name) && status !== 'full' && status !== 'trial'} 
-                                      triggerUnlock={() => setUnlockModalOpen(true)}
+                                    {/* 2. TV TOGGLE */}
+                                    <button 
+                                      onClick={(e) => { e.stopPropagation(); toggleVideoMode(cat.name); }}
+                                      className={cn("text-[10px] font-black uppercase px-2 py-1 rounded border transition-colors", cat.videoEnabled ? "bg-emerald-500/20 border-emerald-500 text-emerald-400" : "opacity-30 border-white/30")}
                                     >
-                                        <div className="p-4 space-y-2">
-                                          {cat.choices.map((choice, idx) => (
-                                            <div key={idx} className="flex gap-2 items-center">
-                                              <span className="text-xs opacity-30 select-none">•</span>
-                                              <input 
-                                                className="bg-transparent text-xs font-medium w-full outline-none border-b border-transparent focus:border-blue-500/50 transition-colors pb-1"
-                                                value={choice.label} 
-                                                placeholder="Task name..."
-                                                onChange={(e) => updateTaskLabel(cat.name, idx, e.target.value)} 
-                                              />
-                                              <button 
-                                                className="text-[10px] text-red-400/50 hover:text-red-400 font-bold px-2"
-                                                onClick={() => removeTaskOption(cat.name, idx)}
-                                              >
-                                                DEL
-                                              </button>
-                                            </div>
-                                          ))}
-                                          
-                                          <button 
-                                            onClick={() => addTaskOption(cat.name)}
-                                            className="mt-4 w-full py-2 bg-white/5 hover:bg-white/10 text-[10px] font-black uppercase tracking-widest rounded-lg transition-colors text-emerald-400"
-                                          >
-                                            + Add Option
-                                          </button>
-                                        </div>
-                                    </PaywallGuard>
-                                    {/* --- PAYWALL GUARD END --- */}
-                                  </motion.div>
-                                )}
-                              </AnimatePresence>
-                            </div>
-                          ))}
+                                      {cat.videoEnabled ? "📺 ON" : "📺 OFF"}
+                                    </button>
 
-                          {/* NEW CATEGORY INPUT (Already Protected by startAddCategory function) */}
-                          {isAddingCat ? (
-                            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-2 bg-white/10 border border-white/20 rounded-xl p-2 backdrop-blur-md shadow-xl">
-                              <input autoFocus type="text" placeholder="New Category Name..." value={newCatName} onChange={(e) => setNewCatName(e.target.value)} className="flex-1 bg-transparent border-none outline-none text-white placeholder-white/30 px-2 font-bold text-sm" onKeyDown={(e) => e.key === 'Enter' && saveNewCategory()} />
-                              <button onClick={saveNewCategory} className="bg-emerald-500 text-white px-3 py-2 rounded-lg text-[10px] font-black uppercase">SAVE</button>
-                              <button onClick={() => setIsAddingCat(false)} className="px-3 py-2 text-white/50 text-[10px] font-black uppercase hover:text-white">X</button>
-                            </motion.div>
-                          ) : (
-                            <button onClick={startAddCategory} className="w-full py-4 rounded-xl border border-dashed border-white/20 text-white/40 hover:text-white hover:border-white/50 hover:bg-white/5 transition-all text-[10px] font-black uppercase tracking-widest">+ Add New System</button>
-                          )}
-                      </div>
+                                    {/* 3. DELETE CATEGORY (Protected) */}
+                                    {!defaultCategories.includes(cat.name) && (
+                                      <button 
+                                        onClick={(e) => { e.stopPropagation(); handleDeleteCategory(cat.name); }}
+                                        className="w-8 h-8 rounded-full bg-red-500/20 text-red-400 flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors"
+                                      >
+                                        🗑️
+                                      </button>
+                                    )}
+                                  </div>
+                                </div>
+
+                                {/* BODY: The Task List */}
+                                <AnimatePresence>
+                                  {expandedCat === cat.name && (
+                                    <motion.div 
+                                      initial={{ height: 0, opacity: 0 }} 
+                                      animate={{ height: "auto", opacity: 1 }} 
+                                      exit={{ height: 0, opacity: 0 }}
+                                      className="border-t border-white/10 bg-black/20"
+                                    >
+                                          <div className="p-4 space-y-2">
+                                            {cat.choices.map((choice, idx) => (
+                                              <div key={idx} className="flex gap-2 items-center">
+                                                <span className="text-xs opacity-30 select-none">•</span>
+                                                <input 
+                                                  className="bg-transparent text-xs font-medium w-full outline-none border-b border-transparent focus:border-blue-500/50 transition-colors pb-1"
+                                                  value={choice.label} 
+                                                  placeholder="Task name..."
+                                                  onChange={(e) => updateTaskLabel(cat.name, idx, e.target.value)} 
+                                                />
+                                                <button 
+                                                  className="text-[10px] text-red-400/50 hover:text-red-400 font-bold px-2"
+                                                  onClick={() => removeTaskOption(cat.name, idx)}
+                                                >
+                                                  DEL
+                                                </button>
+                                              </div>
+                                            ))}
+                                            
+                                            <button 
+                                              onClick={() => addTaskOption(cat.name)}
+                                              className="mt-4 w-full py-2 bg-white/5 hover:bg-white/10 text-[10px] font-black uppercase tracking-widest rounded-lg transition-colors text-emerald-400"
+                                            >
+                                              + Add Option
+                                            </button>
+                                          </div>
+                                    </motion.div>
+                                  )}
+                                </AnimatePresence>
+                              </div>
+                            ))}
+
+                            {/* NEW CATEGORY INPUT */}
+                            {isAddingCat ? (
+                              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-2 bg-white/10 border border-white/20 rounded-xl p-2 backdrop-blur-md shadow-xl">
+                                <input autoFocus type="text" placeholder="New Category Name..." value={newCatName} onChange={(e) => setNewCatName(e.target.value)} className="flex-1 bg-transparent border-none outline-none text-white placeholder-white/30 px-2 font-bold text-sm" onKeyDown={(e) => e.key === 'Enter' && saveNewCategory()} />
+                                <button onClick={saveNewCategory} className="bg-emerald-500 text-white px-3 py-2 rounded-lg text-[10px] font-black uppercase">SAVE</button>
+                                <button onClick={() => setIsAddingCat(false)} className="px-3 py-2 text-white/50 text-[10px] font-black uppercase hover:text-white">X</button>
+                              </motion.div>
+                            ) : (
+                              <button onClick={startAddCategory} className="w-full py-4 rounded-xl border border-dashed border-white/20 text-white/40 hover:text-white hover:border-white/50 hover:bg-white/5 transition-all text-[10px] font-black uppercase tracking-widest">+ Add New System</button>
+                            )}
+                        </div>
+                      </PaywallGuard>
+                      {/* --- END MASTER LOCK --- */}
                     </div>
                   )}
                   

@@ -14,8 +14,6 @@ export async function POST(request: Request) {
     const email = formData.get('email') as string;
     const permalink = formData.get('permalink') as string; // Your product ID
 
-    // Security Check: You can verify the permalink matches your specific product
-    // if (permalink !== 'your_product_permalink') return ...
 
     if (!licenseKey) {
         return NextResponse.json({ error: 'No key provided' }, { status: 400 });

@@ -144,7 +144,7 @@ export const UnlockModal = ({ isOpen, onClose, onUnlock }: any) => {
         </div>
 
         <div className="mt-4 text-center">
-            <a href="https://studycopilot.gumroad.com/l/decide-app" target="_blank" className="text-xs text-slate-600 hover:text-white underline">
+            <a href="https://recapstack.gumroad.com/l/decide-app" target="_blank" className="text-xs text-slate-600 hover:text-white underline">
                 Buy a full license ($5)
             </a>
         </div>
