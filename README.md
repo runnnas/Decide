@@ -1,36 +1,37 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Decide ⚡️
 
-## Getting Started
+A minimalist "Action Engine" that combats decision fatigue by filtering tasks based on your energy level and choosing for you.
 
-First, run the development server:
+## 🚀 Live Demo
+[decide-a.vercel.app](https://decide-a.vercel.app)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🧠 What It Does
+Decide removes the friction of choice. Instead of a standard to-do list, users select a "Vibe" (Chill, Mid, or All Out) and a "System" (Meals, Workouts, etc.). The app randomly selects **one** actionable task and immediately locks you into a focus mode to get it done.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🧩 Features
+* **Smart Randomizer:** Filters tasks based on your selected energy level.
+* **Focus Mode:** A built-in timer that dims distractions so you can execute the task immediately.
+* **TV Mode:** Automatically loads relevant YouTube Shorts or tutorials for the specific task.
+* **Custom Systems:** Users can create and manage their own lists of tasks.
+* **Living Background:** Dynamic "Aurora" background that adapts to dark/light mode.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🛠 Tech Stack
+**Frontend:** Next.js (React), Tailwind CSS
+**State Management:** React Hooks
+**Deployment:** Vercel
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## ⚙️ Core Logic
+Task selection is handled through filtered randomization. Tasks are first narrowed based on the user’s selected energy level and system, then one task is chosen using an unbiased random selection approach to avoid repetitive or predictable outcomes.
 
-## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+## 📦 Installation
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. **Clone the repository**
+   ```bash
+   git clone [https://github.com/runnnas/Decide.git](https://github.com/runnnas/Decide.git)
+   cd Decide
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+2. Install dependencies
+  ```bash
+npm install
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
